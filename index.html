@@ -9,16 +9,20 @@
   <title>Nutrisystem Tips & Weight Loss Guide | TheCreatorVault</title>
   <meta name="description" content="Daily Nutrisystem tips, weight loss strategies, and healthy living advice. Start your journey today.">
 
+  <!-- Preload hero image -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1588776814546-d4d3c3e5a03e?auto=format&fit=crop&w=800&q=80">
+
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; color: #222; }
     header { background: #111; color: white; padding: 20px; text-align: center; }
     .hero { padding: 40px 20px; text-align: center; background: #fff; }
     .hero h1 { font-size: 32px; }
-    .cta { display: inline-block; margin-top: 20px; padding: 15px 25px; background: #ff5a5f; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; }
+    .cta { display: inline-block; margin-top: 20px; padding: 15px 25px; background: #ff5a5f; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; cursor: pointer; }
     .container { max-width: 900px; margin: auto; padding: 20px; }
     .post { background: white; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
     .post img { width: 100%; border-radius: 6px; }
     footer { text-align: center; padding: 20px; background: #111; color: white; }
+    #next-tip-btn { margin-bottom: 20px; }
   </style>
 </head>
 
@@ -32,7 +36,7 @@
     <h1>Daily Nutrisystem Tips for Faster Weight Loss</h1>
     <p>Simple strategies, real results, and proven tips updated daily.</p>
 
-    <a class="cta" href="https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885" target="_blank">
+    <a class="cta" href="https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885" target="_blank" rel="noopener noreferrer">
         Start Nutrisystem Now →
     </a>
 </section>
@@ -43,6 +47,7 @@
     <div class="post" id="featured-post">Loading...</div>
 
     <h2>🌟 Daily Tip of the Day</h2>
+    <button id="next-tip-btn" class="cta">Next Tip</button>
     <div class="post" id="daily-tip">Loading...</div>
 
     <h2>📅 More Daily Tips</h2>
@@ -56,90 +61,132 @@
 <script>
 const affiliateLink = "https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885";
 
-// Load posts dynamically
-fetch("posts.json")
-  .then(res => res.json())
-  .then(posts => {
+const fallbackPosts = [
+  {
+    title: "Stay Hydrated",
+    tip: "Drink at least 8 glasses of water daily to boost metabolism and stay energized.",
+    image: "https://images.unsplash.com/photo-1588776814546-d4d3c3e5a03e?auto=format&fit=crop&w=800&q=80",
+    alt: "Glass of water with lemon",
+    date: "2026-04-03",
+    meta_description: "Importance of staying hydrated for weight loss."
+  },
+  {
+    title: "Eat More Fiber",
+    tip: "Include high-fiber foods like vegetables, fruits, and whole grains in your meals.",
+    image: "https://images.unsplash.com/photo-1572449043410-5042dcf20a1a?auto=format&fit=crop&w=800&q=80",
+    alt: "Healthy high-fiber meal with vegetables",
+    date: "2026-04-02",
+    meta_description: "Boost digestion and control appetite with fiber-rich foods."
+  },
+  {
+    title: "Exercise Regularly",
+    tip: "30 minutes of moderate exercise daily helps burn calories and maintain a healthy weight.",
+    image: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=800&q=80",
+    alt: "Person exercising outdoors",
+    date: "2026-04-01",
+    meta_description: "Daily exercise tips for effective weight loss."
+  }
+];
+
+let postsData = [];
+
+// Render Daily Tip
+function renderDailyTip(post) {
+    const dailyTipEl = document.getElementById("daily-tip");
+    const today = new Date();
+    dailyTipEl.innerHTML = `
+        <h4>${post.title} (${today.toDateString()})</h4>
+        <img src="${post.image}" alt="${post.alt}" loading="lazy">
+        <p>${post.tip}</p>
+        <a class="cta" href="${affiliateLink}" target="_blank" rel="noopener noreferrer">Try Nutrisystem Today</a>
+    `;
+
+    const oldLd = document.querySelector('script[data-daily-tip]');
+    if (oldLd) oldLd.remove();
+
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.dataset.dailyTip = true;
+    ld.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "author": "TheCreatorVault",
+        "datePublished": post.date,
+        "description": post.meta_description,
+        "image": post.image,
+        "mainEntityOfPage": window.location.href + "#daily-tip"
+    });
+    document.head.appendChild(ld);
+}
+
+// Show a new random tip
+function showNextTip() {
+    const index = Math.floor(Math.random() * postsData.length);
+    renderDailyTip(postsData[index]);
+}
+
+// Render all posts
+function renderAllPosts(posts) {
+    postsData = posts;
 
     // Featured post
     const featured = posts[0];
     const featuredEl = document.getElementById("featured-post");
     featuredEl.innerHTML = `
-        <h3><a href="#${featured.title.replace(/\s+/g,'-').toLowerCase()}">${featured.title}</a></h3>
-        <img src="${featured.image}" alt="${featured.alt}">
+        <h3><a href="#${encodeURIComponent(featured.title.replace(/\s+/g,'-').toLowerCase())}">${featured.title}</a></h3>
+        <img src="${featured.image}" alt="${featured.alt}" loading="lazy">
         <p>${featured.tip}</p>
-        <a class="cta" href="${affiliateLink}" target="_blank">Start Now</a>
+        <a class="cta" href="${affiliateLink}" target="_blank" rel="noopener noreferrer">Start Now</a>
     `;
-    const ldFeatured = document.createElement("script");
-    ldFeatured.type = "application/ld+json";
-    ldFeatured.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": featured.title,
-      "author": "TheCreatorVault",
-      "datePublished": featured.date,
-      "description": featured.meta_description,
-      "mainEntityOfPage": window.location.href + "#featured-post"
-    });
-    document.head.appendChild(ldFeatured);
 
-    // Daily Tip of the Day
-    const today = new Date();
-    const dayIndex = today.getDate() % posts.length;
-    const dailyTipPost = posts[dayIndex];
-    const dailyTipEl = document.getElementById("daily-tip");
-    dailyTipEl.innerHTML = `
-        <h4>${dailyTipPost.title} (${today.toDateString()})</h4>
-        <img src="${dailyTipPost.image}" alt="${dailyTipPost.alt}">
-        <p>${dailyTipPost.tip}</p>
-        <a class="cta" href="${affiliateLink}" target="_blank">Try Nutrisystem Today</a>
-    `;
-    const ldDaily = document.createElement("script");
-    ldDaily.type = "application/ld+json";
-    ldDaily.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": dailyTipPost.title,
-      "author": "TheCreatorVault",
-      "datePublished": today.toISOString().split('T')[0],
-      "description": dailyTipPost.meta_description,
-      "mainEntityOfPage": window.location.href + "#daily-tip"
-    });
-    document.head.appendChild(ldDaily);
+    // Initial Daily Tip
+    showNextTip();
 
-    // Load all other posts
+    // Other posts
     const container = document.getElementById("posts");
     posts.slice(1).forEach(post => {
         const el = document.createElement("div");
         el.className = "post";
-        el.id = post.title.replace(/\s+/g,'-').toLowerCase();
-
+        el.id = encodeURIComponent(post.title.replace(/\s+/g,'-').toLowerCase());
         el.innerHTML = `
             <h3><a href="#${el.id}">${post.title}</a></h3>
-            <img src="${post.image}" alt="${post.alt}">
+            <img src="${post.image}" alt="${post.alt}" loading="lazy">
             <p>${post.tip}</p>
-            <a class="cta" href="${affiliateLink}" target="_blank">Try Nutrisystem</a>
+            <a class="cta" href="${affiliateLink}" target="_blank" rel="noopener noreferrer">Try Nutrisystem</a>
         `;
         container.appendChild(el);
+    });
 
+    // JSON-LD for all posts
+    [featured, ...posts.slice(1)].forEach(post => {
         const ld = document.createElement("script");
         ld.type = "application/ld+json";
-        ld.text = JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": post.title,
-          "author": "TheCreatorVault",
-          "datePublished": post.date,
-          "description": post.meta_description,
-          "mainEntityOfPage": window.location.href + "#" + el.id
+        ld.textContent = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "author": "TheCreatorVault",
+            "datePublished": post.date,
+            "description": post.meta_description,
+            "image": post.image,
+            "mainEntityOfPage": window.location.href + "#" + encodeURIComponent(post.title.replace(/\s+/g,'-').toLowerCase())
         });
         document.head.appendChild(ld);
     });
-  })
-  .catch(err => {
-      document.getElementById("featured-post").innerHTML = "Error loading posts.";
-      console.error(err);
-  });
+}
+
+// Fetch posts.json, fallback if needed
+fetch("posts.json")
+    .then(res => res.ok ? res.json() : Promise.reject("Failed to load"))
+    .then(posts => renderAllPosts(posts))
+    .catch(err => {
+        console.warn("Using fallback posts due to error:", err);
+        renderAllPosts(fallbackPosts);
+    });
+
+// Attach Next Tip button
+document.getElementById("next-tip-btn").addEventListener("click", showNextTip);
 </script>
 
 </body>
