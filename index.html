@@ -3,65 +3,23 @@
 <head>
   <meta name="msvalidate.01" content="574044E39556B8B8DAAF1D1F233C87B0" />
   <meta name="google-site-verification" content="eWVDN3vbam9nnaZQu7wAQKyfmJJdM7zjI80l4DGeUrQ" />
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nutrisystem Tips & Weight Loss Guide | TheCreatorVault</title>
-<meta name="description" content="Daily Nutrisystem tips, weight loss strategies, and healthy living advice. Start your journey today.">
+  <title>Nutrisystem Tips & Weight Loss Guide | TheCreatorVault</title>
+  <meta name="description" content="Daily Nutrisystem tips, weight loss strategies, and healthy living advice. Start your journey today.">
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f7f7f7;
-    color: #222;
-}
-header {
-    background: #111;
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-.hero {
-    padding: 40px 20px;
-    text-align: center;
-    background: #fff;
-}
-.hero h1 {
-    font-size: 32px;
-}
-.cta {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 15px 25px;
-    background: #ff5a5f;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 6px;
-}
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-}
-.post {
-    background: white;
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 8px;
-}
-.post img {
-    width: 100%;
-    border-radius: 6px;
-}
-footer {
-    text-align: center;
-    padding: 20px;
-    background: #111;
-    color: white;
-}
-</style>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; color: #222; }
+    header { background: #111; color: white; padding: 20px; text-align: center; }
+    .hero { padding: 40px 20px; text-align: center; background: #fff; }
+    .hero h1 { font-size: 32px; }
+    .cta { display: inline-block; margin-top: 20px; padding: 15px 25px; background: #ff5a5f; color: white; text-decoration: none; font-weight: bold; border-radius: 6px; }
+    .container { max-width: 900px; margin: auto; padding: 20px; }
+    .post { background: white; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
+    .post img { width: 100%; border-radius: 6px; }
+    footer { text-align: center; padding: 20px; background: #111; color: white; }
+  </style>
 </head>
 
 <body>
@@ -82,15 +40,13 @@ footer {
 <div class="container">
 
     <h2>🔥 Today’s Featured Tip</h2>
+    <div class="post" id="featured-post">Loading...</div>
 
-    <div class="post" id="featured-post">
-        Loading...
-    </div>
+    <h2>🌟 Daily Tip of the Day</h2>
+    <div class="post" id="daily-tip">Loading...</div>
 
     <h2>📅 More Daily Tips</h2>
-
     <div id="posts"></div>
-
 </div>
 
 <footer>
@@ -100,52 +56,89 @@ footer {
 <script>
 const affiliateLink = "https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885";
 
-// 🔥 LOAD REAL POSTS FROM posts.json
+// Load posts dynamically
 fetch("posts.json")
   .then(res => res.json())
   .then(posts => {
 
-    // ✅ Featured post
+    // Featured post
     const featured = posts[0];
-    document.getElementById("featured-post").innerHTML = `
-        <h3>
-          <a href="#${featured.title.replace(/\\s+/g,'-').toLowerCase()}">
-            ${featured.title}
-          </a>
-        </h3>
-        <img src="${featured.image}">
+    const featuredEl = document.getElementById("featured-post");
+    featuredEl.innerHTML = `
+        <h3><a href="#${featured.title.replace(/\s+/g,'-').toLowerCase()}">${featured.title}</a></h3>
+        <img src="${featured.image}" alt="${featured.alt}">
         <p>${featured.tip}</p>
         <a class="cta" href="${affiliateLink}" target="_blank">Start Now</a>
     `;
+    const ldFeatured = document.createElement("script");
+    ldFeatured.type = "application/ld+json";
+    ldFeatured.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": featured.title,
+      "author": "TheCreatorVault",
+      "datePublished": featured.date,
+      "description": featured.meta_description,
+      "mainEntityOfPage": window.location.href + "#featured-post"
+    });
+    document.head.appendChild(ldFeatured);
 
-    // ✅ Load all posts
+    // Daily Tip of the Day
+    const today = new Date();
+    const dayIndex = today.getDate() % posts.length;
+    const dailyTipPost = posts[dayIndex];
+    const dailyTipEl = document.getElementById("daily-tip");
+    dailyTipEl.innerHTML = `
+        <h4>${dailyTipPost.title} (${today.toDateString()})</h4>
+        <img src="${dailyTipPost.image}" alt="${dailyTipPost.alt}">
+        <p>${dailyTipPost.tip}</p>
+        <a class="cta" href="${affiliateLink}" target="_blank">Try Nutrisystem Today</a>
+    `;
+    const ldDaily = document.createElement("script");
+    ldDaily.type = "application/ld+json";
+    ldDaily.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": dailyTipPost.title,
+      "author": "TheCreatorVault",
+      "datePublished": today.toISOString().split('T')[0],
+      "description": dailyTipPost.meta_description,
+      "mainEntityOfPage": window.location.href + "#daily-tip"
+    });
+    document.head.appendChild(ldDaily);
+
+    // Load all other posts
     const container = document.getElementById("posts");
-
     posts.slice(1).forEach(post => {
         const el = document.createElement("div");
-
-        // 🔥 SEO BOOST (anchor IDs)
         el.className = "post";
-        el.id = post.title.replace(/\\s+/g,'-').toLowerCase();
+        el.id = post.title.replace(/\s+/g,'-').toLowerCase();
 
         el.innerHTML = `
-            <h3>
-              <a href="#${post.title.replace(/\\s+/g,'-').toLowerCase()}">
-                ${post.title}
-              </a>
-            </h3>
-            <img src="${post.image}">
+            <h3><a href="#${el.id}">${post.title}</a></h3>
+            <img src="${post.image}" alt="${post.alt}">
             <p>${post.tip}</p>
             <a class="cta" href="${affiliateLink}" target="_blank">Try Nutrisystem</a>
         `;
-
         container.appendChild(el);
-    });
 
+        const ld = document.createElement("script");
+        ld.type = "application/ld+json";
+        ld.text = JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": post.title,
+          "author": "TheCreatorVault",
+          "datePublished": post.date,
+          "description": post.meta_description,
+          "mainEntityOfPage": window.location.href + "#" + el.id
+        });
+        document.head.appendChild(ld);
+    });
   })
   .catch(err => {
-    document.getElementById("featured-post").innerHTML = "Error loading posts.";
-    console.error(err);
+      document.getElementById("featured-post").innerHTML = "Error loading posts.";
+      console.error(err);
   });
 </script>
 
