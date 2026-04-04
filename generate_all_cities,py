@@ -1,0 +1,35 @@
+# Save as: generate_all_cities.py then: python generate_all_cities.py
+import pandas as pd
+import os
+from urllib.parse import quote
+
+# Get ALL US cities (30K+)
+url = 'https://raw.githubusercontent.com/kelvins/US-Cities-Database/main/csv/us_cities.csv'
+df = pd.read_csv(url, sep=';')
+
+os.makedirs('all-usa-nutrisystem', exist_ok=True)
+
+for i, row in df.iterrows():
+    city = row['CITY'].replace(' ', '-').lower()
+    state = row['STATE_CODE'].lower()
+    filename = f'all-usa-nutrisystem/{city}-{state}-nutrisystem.html'
+    
+    html = f'''<!DOCTYPE html>
+<html><head><title>Nutrisystem {row['CITY']} {row['STATE_CODE']} | Local Delivery</title>
+<meta name="description" content="Nutrisystem delivery {row['CITY']} {row['STATE_CODE']}. Portion control tips {row['COUNTY']}."></head>
+<body style="max-width:800px;margin:auto;padding:20px;font-family:Arial">
+<h1>Nutrisystem {row['CITY']} {row['STATE_CODE']}</h1>
+<p>Local delivery | {row['COUNTY']} | {row['LATITUDE']:.2f},{row['LONGITUDE']:.2f}</p>
+<a href="https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885" style="background:red;color:white;padding:15px 30px;display:inline-block;font-weight:bold">Order Now →</a>
+<p style="background:yellow;padding:10px"><strong>Affiliate Disclosure</strong>: Commission earned. Consult doctor.</p>
+<footer>© 2026 TheCreatorVault | {row['CITY']} {row['STATE_CODE']}</footer>
+</body></html>'''
+    
+    with open(filename, 'w') as f:
+        f.write(html)
+    
+    if i % 1000 == 0:
+        print(f'Generated {i} city pages...')
+
+print(f'✅ COMPLETE! {len(df)} pages in all-usa-nutrisystem/ folder')
+print('Upload all → GSC sitemap → #1 every city!')
