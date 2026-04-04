@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nutrisystem Tips & Weight Loss Guide | TheCreatorVault</title>
+<meta name="description" content="Daily Nutrisystem tips, weight loss strategies, and healthy living advice. Start your journey today.">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f7f7f7;
+    color: #222;
+}
+header {
+    background: #111;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+.hero {
+    padding: 40px 20px;
+    text-align: center;
+    background: #fff;
+}
+.hero h1 {
+    font-size: 32px;
+}
+.cta {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 25px;
+    background: #ff5a5f;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+}
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+.post {
+    background: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+.post img {
+    width: 100%;
+    border-radius: 6px;
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #111;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>TheCreatorVault</h2>
+</header>
+
+<section class="hero">
+    <h1>Daily Nutrisystem Tips for Faster Weight Loss</h1>
+    <p>Simple strategies, real results, and proven tips updated daily.</p>
+
+    <a class="cta" href="https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885" target="_blank">
+        Start Nutrisystem Now →
+    </a>
+</section>
+
+<div class="container">
+
+    <h2>🔥 Today’s Featured Tip</h2>
+
+    <div class="post" id="featured-post">
+        Loading...
+    </div>
+
+    <h2>📅 More Daily Tips</h2>
+
+    <div id="posts"></div>
+
+</div>
+
+<footer>
+    © 2026 TheCreatorVault — All Rights Reserved
+</footer>
+
+<script>
+const affiliateLink = "https://convert.ctypy.com/aff_c?offer_id=29197&aff_id=21885";
+
+// Simulated posts (replace later with real JSON if needed)
+const posts = [];
+
+for (let i = 1; i <= 30; i++) {
+    posts.push({
+        title: "Nutrisystem Tip #" + i,
+        tip: [
+            "Stay hydrated throughout the day!",
+            "Eat more protein to stay full longer.",
+            "Track your meals for better results.",
+            "Add vegetables to every meal.",
+            "Start your day with a healthy breakfast."
+        ][i % 5],
+        image: [
+            "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800",
+            "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+            "https://images.unsplash.com/photo-1506089676908-3592f7389d4d?w=800"
+        ][i % 3]
+    });
+}
+
+// Featured post
+const featured = posts[0];
+document.getElementById("featured-post").innerHTML = `
+    <h3>${featured.title}</h3>
+    <img src="${featured.image}">
+    <p>${featured.tip}</p>
+    <a class="cta" href="${affiliateLink}" target="_blank">Start Now</a>
+`;
+
+// Load posts
+const container = document.getElementById("posts");
+
+posts.slice(1).forEach(post => {
+    const el = document.createElement("div");
+    el.className = "post";
+    el.innerHTML = `
+        <h3>${post.title}</h3>
+        <img src="${post.image}">
+        <p>${post.tip}</p>
+        <a class="cta" href="${affiliateLink}" target="_blank">Try Nutrisystem</a>
+    `;
+    container.appendChild(el);
+});
+</script>
+
+</body>
+</html>
