@@ -1,0 +1,38 @@
+<script>
+const container = document.getElementById("posts");
+const featuredContainer = document.getElementById("featured-post");
+
+fetch("posts.json")
+  .then(res => res.json())
+  .then(data => {
+
+    // Featured post
+    const featured = data[0];
+    featuredContainer.innerHTML = `
+      <h3>${featured.title}</h3>
+      <img src="${featured.image}">
+      <p>${featured.tip}</p>
+      <a class="cta" href="${featured.link}" target="_blank">Start Now</a>
+    `;
+
+    // Other posts
+    data.slice(1).forEach(post => {
+      const el = document.createElement("div");
+      el.className = "post";
+
+      el.innerHTML = `
+        <h3>${post.title}</h3>
+        <img src="${post.image}">
+        <p>${post.tip}</p>
+        <a class="cta" href="${post.link}" target="_blank">Try Nutrisystem</a>
+      `;
+
+      container.appendChild(el);
+    });
+
+  })
+  .catch(err => {
+    featuredContainer.innerHTML = "Error loading posts.";
+    console.error(err);
+  });
+</script>
